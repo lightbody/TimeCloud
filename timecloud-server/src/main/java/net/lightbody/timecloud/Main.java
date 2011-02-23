@@ -1,28 +1,35 @@
 package net.lightbody.timecloud;
 
-import org.apache.commons.cli.*;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+
+import javax.servlet.ServletContextEvent;
 
 public class Main {
-    public static void main(String[] args) {
-        Options options = new Options();
-        options.addOption("p", false, "the port to listen on (8080 by default)");
-        CommandLineParser parser = new PosixParser();
-        CommandLine cmd;
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            System.err.println("Command line problem: " + e.getMessage());
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("java -jar timecloud-server.jar", options);
+    public static void main(String[] args) throws Exception {
+        final Injector injector = Guice.createInjector(new ConfigModule(args), new JettyModule(), new ServletModule() {
+            @Override
+            protected void configureServlets() {
+                serve("*.html").with(FooServlet.class);
+            }
+        });
 
-            return;
-        }
+        Server server = injector.getInstance(Server.class);
+        GuiceServletContextListener gscl = new GuiceServletContextListener() {
+            @Override
+            protected Injector getInjector() {
+                return injector;
+            }
+        };
+        server.start();
 
-        int port = Integer.parseInt(cmd.getOptionValue('p', "8080"));
-        System.out.println("Port " + port);
+        ServletContextHandler context = (ServletContextHandler) server.getHandler();
+        gscl.contextInitialized(new ServletContextEvent(context.getServletContext()));
 
-        //Server server = new Server(8080);
-
+        server.join();
     }
 }
