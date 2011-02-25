@@ -16,7 +16,7 @@ public class CreateRequest {
     }
 
     public CreateRequest(long step) {
-        this.startTime = System.currentTimeMillis();
+        this.startTime = (System.currentTimeMillis() + 500L) / 1000L;
         this.step = step;
     }
 
