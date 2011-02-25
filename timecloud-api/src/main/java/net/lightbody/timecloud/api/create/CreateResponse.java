@@ -1,20 +1,20 @@
 package net.lightbody.timecloud.api.create;
 
 public class CreateResponse {
-    private String bar;
+    private String id;
 
     public CreateResponse() {
     }
 
-    public CreateResponse(String bar) {
-        this.bar = bar;
+    public CreateResponse(String id) {
+        this.id = id;
     }
 
-    public String getBar() {
-        return bar;
+    public String getId() {
+        return id;
     }
 
-    public void setBar(String bar) {
-        this.bar = bar;
+    public void setId(String id) {
+        this.id = id;
     }
 }
