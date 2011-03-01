@@ -3,6 +3,8 @@ package net.lightbody.timecloud.sample;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import net.lightbody.timecloud.BaseServlet;
+import net.lightbody.timecloud.api.create.CreateRequest;
 import net.lightbody.timecloud.api.sample.SampleRequest;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.rrd4j.core.RrdDb;
@@ -18,24 +20,18 @@ import java.io.IOException;
 import java.util.Map;
 
 @Singleton
-public class SampleServlet extends HttpServlet {
-    private ObjectMapper mapper;
-    private File dataDir;
-
-    @Inject
-    public SampleServlet(ObjectMapper mapper, @Named("data") File dataDir) {
-        this.mapper = mapper;
-        this.dataDir = dataDir;
+public class SampleServlet extends BaseServlet<SampleRequest> {
+    public SampleServlet() {
+        super(SampleRequest.class);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SampleRequest request = mapper.readValue(req.getInputStream(), SampleRequest.class);
+    protected Object doPost(String account, String id, SampleRequest request) throws Exception {
+        File parent = new File(dataDir, account + "/" + id);
+        parent.mkdirs();
+        File file = new File(parent, "database.rrd");
 
-        String id = req.getPathInfo().substring(1);
-
-        File path = new File(dataDir, id + ".rrd");
-        RrdDb db = new RrdDb(path.getPath());
+        RrdDb db = new RrdDb(file.getPath());
 
         Sample sample = db.createSample(Util.normalize(request.getTime(), db.getRrdDef().getStep()));
         for (Map.Entry<String, Double> entry : request.getValues().entrySet()) {
@@ -44,5 +40,7 @@ public class SampleServlet extends HttpServlet {
         sample.update();
 
         db.close();
+
+        return null;
     }
 }

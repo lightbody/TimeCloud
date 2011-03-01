@@ -18,7 +18,7 @@ public class Main {
         final Injector injector = Guice.createInjector(new ConfigModule(args), new JettyModule(), new ServletModule() {
             @Override
             protected void configureServlets() {
-                serve("/create").with(CreateServlet.class);
+                serve("/create/*").with(CreateServlet.class);
                 serve("/sample/*").with(SampleServlet.class);
                 serve("/graph/*").with(GraphServlet.class);
                 serve("/fetch/*").with(FetchServlet.class);

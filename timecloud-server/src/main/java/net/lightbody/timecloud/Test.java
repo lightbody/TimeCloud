@@ -27,29 +27,34 @@ public class Test {
         ObjectMapper om = new ObjectMapper();
         System.out.println(Util.getTime());
 
-//        URL url = new URL("http://localhost:8080/create");
-//        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//        conn.setRequestMethod("POST");
-//        conn.setDoOutput(true);
-//
-//        CreateRequest o = new CreateRequest(60);
-//        o.addArchive("AVERAGE", 0.5, 1, 90 * 24 * 60);
-//        o.addArchive("AVERAGE", 0.5, 60, 365 * 24);
-//        o.addArchive("AVERAGE", 0.5, 60 * 24, 5 * 365);
-//        o.addArchive("TOTAL", 0.5, 1, 90 * 24 * 60);
-//        o.addArchive("TOTAL", 0.5, 60, 365 * 24);
-//        o.addArchive("TOTAL", 0.5, 60 * 24, 5 * 365);
-//        o.addArchive("MIN", 0.5, 1, 90 * 24 * 60);
-//        o.addArchive("MIN", 0.5, 60, 365 * 24);
-//        o.addArchive("MIN", 0.5, 60 * 24, 5 * 365);
-//        o.addArchive("MAX", 0.5, 1, 90 * 24 * 60);
-//        o.addArchive("MAX", 0.5, 60, 365 * 24);
-//        o.addArchive("MAX", 0.5, 60 * 24, 5 * 365);
-//        o.addDatasource("takes", "GAUGE", 600, Double.NaN, Double.NaN);
-//        o.addDatasource("puts", "GAUGE", 600, Double.NaN, Double.NaN);
-//        om.writeValue(conn.getOutputStream(), o);
-//        System.out.println(conn.getResponseCode());
-//        System.out.println(IOUtils.readFully(conn.getInputStream()));
+        URL url = new URL("http://localhost:8080/create/sf-ff");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Account", "prod_queues");
+        conn.setDoOutput(true);
+
+        CreateRequest o = new CreateRequest(60);
+        o.addArchive("AVERAGE", 0.5, 1, 90 * 24 * 60);
+        o.addArchive("AVERAGE", 0.5, 60, 365 * 24);
+        o.addArchive("AVERAGE", 0.5, 60 * 24, 5 * 365);
+        o.addArchive("TOTAL", 0.5, 1, 90 * 24 * 60);
+        o.addArchive("TOTAL", 0.5, 60, 365 * 24);
+        o.addArchive("TOTAL", 0.5, 60 * 24, 5 * 365);
+        o.addArchive("MIN", 0.5, 1, 90 * 24 * 60);
+        o.addArchive("MIN", 0.5, 60, 365 * 24);
+        o.addArchive("MIN", 0.5, 60 * 24, 5 * 365);
+        o.addArchive("MAX", 0.5, 1, 90 * 24 * 60);
+        o.addArchive("MAX", 0.5, 60, 365 * 24);
+        o.addArchive("MAX", 0.5, 60 * 24, 5 * 365);
+        o.addDatasource("takes", "GAUGE", 600, Double.NaN, Double.NaN);
+        o.addDatasource("puts", "GAUGE", 600, Double.NaN, Double.NaN);
+        om.writeValue(conn.getOutputStream(), o);
+        System.out.println(conn.getResponseCode());
+        if (conn.getResponseCode() == 200) {
+            System.out.println(IOUtils.readFully(conn.getInputStream()));
+        } else {
+            System.out.println(IOUtils.readFully(conn.getErrorStream()));
+        }
 
 
 //        long time = 1298676470;
@@ -105,19 +110,19 @@ public class Test {
 //        sample.setAndUpdate("920808900:12423");
 //        rrdDb.close();
 
-        RrdGraphDef graphDef = new RrdGraphDef();
-        graphDef.setTimeSpan(920804400L, 920808000L);
-        graphDef.datasource("myspeed", "./test.rrd", "speed", ConsolFun.AVERAGE);
-        graphDef.datasource("minspeed", "./test.rrd", "speed", ConsolFun.MIN);
-        graphDef.datasource("maxspeed", "./test.rrd", "speed", ConsolFun.MAX);
-        graphDef.line("myspeed", Color.BLACK, null, 2);
-        graphDef.line("minspeed", Color.BLUE, null, 2);
-        graphDef.line("maxspeed", Color.RED, null, 2);
-        graphDef.setFilename("./speed.gif");
-        graphDef.setStep(600 * 6);
-        RrdGraph graph = new RrdGraph(graphDef);
-        BufferedImage bi = new BufferedImage(100,100, BufferedImage.TYPE_INT_RGB);
-        graph.render(bi.getGraphics());
+//        RrdGraphDef graphDef = new RrdGraphDef();
+//        graphDef.setTimeSpan(920804400L, 920808000L);
+//        graphDef.datasource("myspeed", "./test.rrd", "speed", ConsolFun.AVERAGE);
+//        graphDef.datasource("minspeed", "./test.rrd", "speed", ConsolFun.MIN);
+//        graphDef.datasource("maxspeed", "./test.rrd", "speed", ConsolFun.MAX);
+//        graphDef.line("myspeed", Color.BLACK, null, 2);
+//        graphDef.line("minspeed", Color.BLUE, null, 2);
+//        graphDef.line("maxspeed", Color.RED, null, 2);
+//        graphDef.setFilename("./speed.gif");
+//        graphDef.setStep(600 * 6);
+//        RrdGraph graph = new RrdGraph(graphDef);
+//        BufferedImage bi = new BufferedImage(100,100, BufferedImage.TYPE_INT_RGB);
+//        graph.render(bi.getGraphics());
 
     }
 }
