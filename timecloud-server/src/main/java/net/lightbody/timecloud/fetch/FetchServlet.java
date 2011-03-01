@@ -3,7 +3,9 @@ package net.lightbody.timecloud.fetch;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import net.lightbody.timecloud.BaseServlet;
 import net.lightbody.timecloud.api.fetch.FetchResponse;
+import net.lightbody.timecloud.api.sample.SampleRequest;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.core.FetchData;
@@ -19,22 +21,17 @@ import java.io.File;
 import java.io.IOException;
 
 @Singleton
-public class FetchServlet extends HttpServlet {
-    private ObjectMapper mapper;
-    private File dataDir;
-
-    @Inject
-    public FetchServlet(ObjectMapper mapper, @Named("data") File dataDir) {
-        this.mapper = mapper;
-        this.dataDir = dataDir;
+public class FetchServlet extends BaseServlet {
+    protected FetchServlet() {
+        super(null);
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String id = req.getPathInfo().substring(1);
-        String path = new File(dataDir, id + ".rrd").getPath();
+    protected Object doGet(String account, String id, HttpServletRequest req) throws ServletException, IOException {
+        File parent = new File(dataDir, account + "/" + id);
+        File file = new File(parent, "database.rrd");
 
-        RrdDb db = new RrdDb(path);
+        RrdDb db = new RrdDb(file.getPath());
         long step = db.getRrdDef().getStep();
         long start = Util.normalize(Long.parseLong(req.getParameter("start")), step);
         long end = Util.normalize(Long.parseLong(req.getParameter("end")), step);
@@ -58,7 +55,6 @@ public class FetchServlet extends HttpServlet {
         long[] timestamps = data.getTimestamps();
         double[][] values = data.getValues();
 
-        FetchResponse response = new FetchResponse(dsNames, timestamps, values);
-        mapper.writeValue(resp.getOutputStream(), response);
+        return new FetchResponse(dsNames, timestamps, values);
     }
 }

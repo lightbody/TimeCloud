@@ -9,6 +9,21 @@
         <artifactId>parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorId>jar-with-dependencies</descriptorId>
+                    <archive>
+                        <manifest>
+                            <mainClass>net.lightbody.timecloud.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>net.lightbody.timecloud</groupId>

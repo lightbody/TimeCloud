@@ -48,17 +48,7 @@ public abstract class BaseServlet<T> extends HttpServlet {
             Object response = doPost(account, id, request);
             respond(resp, response);
         } catch (Exception e) {
-            if (e instanceof TimeCloudException) {
-                resp.setStatus(((TimeCloudException) e).getStatusCode());
-            } else {
-                resp.setStatus(500);
-            }
-
-            try {
-                respond(resp, new JsonException(e));
-            } catch (Exception e1) {
-                e.printStackTrace(resp.getWriter());
-            }
+            handleError(resp, e);
         }
     }
 
@@ -68,17 +58,37 @@ public abstract class BaseServlet<T> extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Object response = doGet(req);
+        String id = null;
+        if (req.getPathInfo() != null) {
+            id = req.getPathInfo().substring(1);
+        }
+
+        String account = req.getHeader("Account");
+
+        Object response = doGet(account, id, req);
         try {
             respond(resp, response);
         } catch (Exception e) {
-            resp.setStatus(500);
-            e.printStackTrace(resp.getWriter());
+            handleError(resp, e);
         }
     }
 
-    protected Object doGet(HttpServletRequest req) throws ServletException, IOException {
+    protected Object doGet(String account, String id, HttpServletRequest req) throws ServletException, IOException {
         return null;
+    }
+
+    private void handleError(HttpServletResponse resp, Exception e) throws IOException {
+        if (e instanceof TimeCloudException) {
+            resp.setStatus(((TimeCloudException) e).getStatusCode());
+        } else {
+            resp.setStatus(500);
+        }
+
+        try {
+            respond(resp, new JsonException(e));
+        } catch (Exception e1) {
+            e.printStackTrace(resp.getWriter());
+        }
     }
 
     private void respond(HttpServletResponse resp, Object response) throws Exception {
