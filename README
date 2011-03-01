@@ -1,1 +1,3 @@
-POST /create
+Example graph URL:
+
+http://localhost:8080/graph/sf-ff?start=-2d&end=-3h&step=900&account=prod_queues&width=900&height=450&ds1=a-puts&dsn1=puts&dscf1=AVERAGE&ds2=n-puts&dsn2=puts&dscf2=MIN&ds3=x-puts&dsn3=puts&dscf3=MAX&line1=a-puts&linec1=FF0000&linel1=AvgPuts&linet1=2&line2=n-puts&linec2=00FF00&linel2=MinPuts&linet2=2&line3=x-puts&linec3=0000FF&linel3=MaxPuts&linet3=2
