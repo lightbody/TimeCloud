@@ -27,6 +27,6 @@ public class Test {
 
         SampleRequest req = new SampleRequest();
         req.addValue("foo", 5.6);
-        client.sample("foo", req);
+        client.sample("sf-ff", req);
     }
 }

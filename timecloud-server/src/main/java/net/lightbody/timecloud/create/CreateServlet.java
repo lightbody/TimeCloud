@@ -6,7 +6,7 @@ import net.lightbody.timecloud.api.Archive;
 import net.lightbody.timecloud.api.Datasource;
 import net.lightbody.timecloud.api.TimeCloudException;
 import net.lightbody.timecloud.api.create.CreateRequest;
-import net.lightbody.timecloud.api.create.DatabaseAlreadyExistsException;
+import net.lightbody.timecloud.api.DatabaseAlreadyExistsException;
 import org.rrd4j.ConsolFun;
 import org.rrd4j.DsType;
 import org.rrd4j.core.RrdDb;

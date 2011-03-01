@@ -1,4 +1,4 @@
-package net.lightbody.timecloud.api.create;
+package net.lightbody.timecloud.api;
 
 import net.lightbody.timecloud.api.TimeCloudException;
 
